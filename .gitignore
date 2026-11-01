@@ -1,0 +1,10 @@
+node_modules/
+.qiandao-cache/
+downloads/
+.env
+.env.*
+.vercel/
+.DS_Store
+*.tmp
+__pycache__/
+tests/.tmp-*/

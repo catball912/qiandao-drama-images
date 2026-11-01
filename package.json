@@ -1,0 +1,10 @@
+{
+  "name": "qiandao-drama-images",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "供 AI 代理搜尋千島劇本封面、讀取圖集及核對下載尺寸的技能。",
+  "engines": { "node": ">=22" },
+  "scripts": { "test": "node --test tests/*.test.mjs" },
+  "license": "MIT"
+}

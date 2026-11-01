@@ -1,0 +1,4 @@
+interface:
+  display_name: "千島劇本圖片搜尋"
+  short_description: "搜尋劇本封面與圖集，核對發行版本、下載尺寸及來源完整性。"
+  default_prompt: "使用 $qiandao-drama-images 搜尋指定劇本的封面與角色圖片，保存可取得的最高解像度及來源紀錄。"
