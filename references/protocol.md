@@ -58,7 +58,7 @@ GET https://api.qiandao.com/treasure/flora/v2/entry/ssr?entryType=spu&entryId=<�
 
 `treasure` 圖片以 `!info` 查尺寸、`!_origin` 取得公開回應。其他支援的千島 CDN 圖片以 `?x-oss-process=image/info` 查尺寸，再嘗試 `?x-oss-process=image/format,jpg` 或 `png`；JPEG 來源先用 JPG，避免無細節增益的巨大 PNG。每個候選均須讀取實際檔案尺寸。來源資訊吻合不等於取得位元組完全相同的原檔；CDN 轉碼必須記錄。
 
-每張上限 48 MiB，來源資訊 128 KiB。容器檢查支援 PNG、JPEG、WebP、GIF；不包含完整像素解碼。網路層保留 HTTPS 主機、SNI 與憑證檢查；只在連線失敗時嘗試同 CDN 的替代邊緣 DNS，不針對 HTTP 拒絕或 TLS 錯誤重試。
+每張上限 48 MiB，來源資訊 128 KiB。容器檢查支援 PNG、JPEG、WebP、GIF；不包含完整像素解碼。網路層保留 HTTPS 主機、SNI 與憑證檢查；只在連線失敗時嘗試同 CDN 的替代邊緣 DNS，不針對 HTTP 拒絕或 TLS 錯誤重試。2.0 亦支援網站既有外部圖片來源，直接保存其回應並核對像素；不套用千島專用的 query 移除或 CDN 轉碼。完整來源範圍見 [網站方法對照](search-methods.md)。
 
 ## 公開來源與核對摘要
 

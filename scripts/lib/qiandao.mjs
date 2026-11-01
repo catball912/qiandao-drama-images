@@ -2,6 +2,9 @@ import { readFile, writeFile, mkdir, rename } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import { getPublicQiandao } from './public-client.mjs';
+import { checkedUrl, isQiandaoCdn, fetchSource, responseText, decodeEntries } from './sources.mjs';
+export { boundedBytes } from './sources.mjs';
+export const knownSources = JSON.parse(await readFile(new URL('./known-sources.json', import.meta.url), 'utf8'));
 
 const t2s = JSON.parse(await readFile(new URL('./t2s.json', import.meta.url), 'utf8'));
 export const simplify = text => Array.from(String(text), c => t2s[c] || c).join('');
@@ -23,49 +26,19 @@ export async function saveJson(path, value) {
   await writeFile(temporary, JSON.stringify(value, null, 2) + '\n');
   await rename(temporary, path);
 }
-export async function boundedBytes(response, limit) {
-  if (!response.ok) {
-    await response.body?.cancel();
-    const error = new Error('來源回傳 HTTP ' + response.status);
-    error.status = response.status;
-    throw error;
-  }
-  if (Number(response.headers.get('content-length')) > limit) {
-    await response.body?.cancel();
-    throw new Error('來源超過單一回應大小限制。');
-  }
-  if (!response.body) throw new Error('來源沒有回應內容。');
-  const reader = response.body.getReader(), chunks = [];
-  let total = 0;
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      total += value.length;
-      if (total > limit) throw new Error('來源超過單一回應大小限制。');
-      chunks.push(value);
-    }
-  } catch (error) { await reader.cancel().catch(() => {}); throw error; }
-  finally { reader.releaseLock(); }
-  return Buffer.concat(chunks, total);
-}
 
 export function canonicalImage(raw) {
   if (typeof raw !== 'string' || raw.length > 3000) throw new Error('圖片網址格式不正確。');
   const value = raw.replaceAll('&amp;', '&')
     .replace(/^echotechoss:\/\/interior-admin-v2\.image\//, 'https://public.qiandaocdn.com/interior/images/')
     .replace(/^echotechoss:\/\/user-treasure-v2\.image\//, 'https://treasure.qiandaocdn.com/treasure/images/');
-  const url = new URL(value);
-  if (url.protocol !== 'https:' || url.username || url.password || (url.port && url.port !== '443') ||
-      !['public.qiandaocdn.com', 'treasure.qiandaocdn.com', 'cdn.qiandaoapp.com'].includes(url.hostname)) {
-    throw new Error('只支援已核對的公開千島圖片 CDN。');
-  }
+  const url = checkedUrl(value, 'image');
   const info = url.searchParams.get('imginfo') || '';
   const width = Number(info.match(/(?:^|,)w(\d+)/)?.[1]);
   const height = Number(info.match(/(?:^|,)h(\d+)/)?.[1]);
   const reported = width > 0 && height > 0 ? { width, height, verified: false } : null;
-  url.pathname = url.pathname.split('!')[0];
-  url.search = ''; url.hash = '';
+  if (isQiandaoCdn(url.href)) { url.pathname = url.pathname.split('!')[0]; url.search = ''; }
+  url.hash = '';
   return { url: url.href, reported };
 }
 
@@ -132,9 +105,7 @@ async function jsonAt(path, signed) {
   for (const origin of origins) {
     try {
       const raw = origin + path;
-      const init = { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout(12000), credentials: 'omit', redirect: 'error' };
-      const response = signed ? await getPublicQiandao(raw, init) : await fetch(raw, init);
-      return JSON.parse((await boundedBytes(response, 5 * 1024 * 1024)).toString('utf8'));
+      return JSON.parse(responseText(await fetchSource(raw, { timeout: 12000, ...(signed ? { get: getPublicQiandao } : {}) })));
     } catch (error) {
       // 明確拒絕不藉由切換網域重試。
       if ([401, 403, 429].includes(error.status)) throw error;
@@ -143,27 +114,48 @@ async function jsonAt(path, signed) {
   }
   throw lastError;
 }
+export function compactEntry(item, query = '') {
+  const id = String(item.id);
+  return { id, name: item.name, sourceName: item.sourceName || item.name,
+    description: String(item.key_property || item.description || ''), rating: item.rating || '',
+    imgs: item.imgs || {}, image: item.image || '', exactTitle: normalName(item.name) === normalName(query),
+    sourcePage: 'https://qiandao.com/spu?id=' + id,
+    imageLabels: { ...(item.imageLabels || {}), ...(knownSources.imageLabels?.[id] || {}) },
+    supplements: [...(item.supplements || []), ...(knownSources.supplements?.[id] || [])],
+    historicalCoverage: knownSources.galleryChecks?.[id] || null };
+}
 export async function search(query, { cache = '.qiandao-cache', refresh = false, page = 1 } = {}) {
-  if (!String(query || '').trim() || query.length > 120) throw new Error('請提供 1 至 120 字的劇本名稱。');
+  query = String(query || '').trim().replace(/^[《\s]+|[》\s]+$/g, '');
+  if (!query || query.length > 120) throw new Error('請提供 1 至 120 字的劇本名稱。');
   if (!Number.isInteger(page) || page < 1 || page > 20) throw new Error('頁數必須介乎 1 至 20。');
-  const file = resolve(cache, 'search', hash(normalName(query) + ':' + page) + '.json');
+  const file = resolve(cache, 'search-v2', hash(normalName(query) + ':' + page) + '.json');
   if (!refresh) { const saved = await readJson(file); if (saved) return { ...saved, cacheHit: true }; }
-  const variants = [...new Set([simplify(query), query])], entries = new Map();
+  const variants = [...new Set([simplify(query), query])], entries = new Map(), warnings = [];
   for (const spelling of variants) {
     const params = new URLSearchParams({ q: spelling, 'start-index': String((page - 1) * 30), 'max-results': '30', origin: 'history', scene: 'qiandao_web' });
-    const payload = await jsonAt('/plast/search/spu?' + params, false);
-    if (payload.code !== 200 || !Array.isArray(payload.data?.items)) throw new Error('搜尋回應格式已改變。');
-    for (const item of payload.data.items) {
-      if (!item?.id || !item.name) continue;
-      entries.set(String(item.id), { id: String(item.id), name: item.name,
-        description: String(item.key_property || item.description || ''),
-        exactTitle: normalName(item.name) === normalName(query),
-        sourcePage: 'https://qiandao.com/spu?id=' + item.id });
+    let items;
+    try {
+      const payload = await jsonAt('/plast/search/spu?' + params, false);
+      if (payload.code !== 200 || !Array.isArray(payload.data?.items)) throw new Error('搜尋回應格式已改變。');
+      items = payload.data.items;
+    } catch (error) {
+      warnings.push('公開搜尋 API 未能讀取：' + error.message);
+      // 明確拒絕不藉由另一入口重試；其餘失敗使用網頁原有的 Nuxt 後備。
+      if ([401, 403, 429].includes(error.status)) break;
+      if (page === 1) {
+        try { items = decodeEntries(responseText(await fetchSource('https://qiandao.com/search?' + new URLSearchParams({ q: spelling })))); }
+        catch (fallback) { warnings.push('搜尋頁後備未能讀取：' + fallback.message); }
+      }
     }
+    for (const item of items || []) if (item?.id && item.name) entries.set(String(item.id), compactEntry(item, query));
   }
-  const result = { query, page, pageSize: 30, checkedAt: new Date().toISOString(),
+  if (!entries.size && page === 1) {
+    for (const entry of knownSources.entries) if (normalName(entry.name) === normalName(query)) entries.set(String(entry.id), compactEntry(entry, query));
+    if (entries.size) warnings.push('即時搜尋未取得作品；目前使用有日期紀錄的公開來源後備。');
+  }
+  const result = { schemaVersion: 2, query, page, pageSize: 30, checkedAt: new Date().toISOString(), warnings: [...new Set(warnings)],
     entries: [...entries.values()].sort((a, b) => Number(b.exactTitle) - Number(a.exactTitle)),
-    note: '同名作品可能屬於不同發行方；請依 description 及作品頁確認。每種字形每頁最多 30 個結果，並非全站總數。' };
+    note: '同名作品可能屬於不同發行方，須確認版本。每種字形每頁最多 30 個結果；摘要不是完整圖集。' };
   await saveJson(file, result);
   return { ...result, cacheHit: false };
 }

@@ -1,17 +1,15 @@
 import { readFile, writeFile, mkdir, rename } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { randomUUID } from 'node:crypto';
-import { canonicalImage, boundedBytes, hash, readJson, saveJson } from './qiandao.mjs';
-import { fetchCdn } from './cdn-transport.mjs';
+import { canonicalImage, hash, readJson, saveJson } from './qiandao.mjs';
+import { fetchSource, isQiandaoCdn } from './sources.mjs';
 import { imageDetails } from './image-details.mjs';
 
 async function responseBytes(url, limit, timeout = 45000) {
-  const response = await fetchCdn(url, {
-    signal: AbortSignal.timeout(timeout), headers: { Accept: '*/*', 'User-Agent': 'qiandao-drama-images/1.0' },
-  });
-  return boundedBytes(response, limit);
+  return (await fetchSource(url, { kind: 'image', limit, timeout })).bytes;
 }
 async function sourceInfo(url) {
+  if (!isQiandaoCdn(url)) return null;
   const suffix = new URL(url).pathname.startsWith('/treasure/') ? '!info' : '?x-oss-process=image/info';
   try {
     const data = JSON.parse((await responseBytes(url + suffix, 128 * 1024, 18000)).toString('utf8'));
@@ -23,6 +21,7 @@ async function sourceInfo(url) {
   }
 }
 export function candidates(url, sourceSize) {
+  if (!isQiandaoCdn(url)) return [url];
   if (new URL(url).pathname.startsWith('/treasure/')) return [url + '!_origin'];
   const jpeg = /^(?:jpe?g)$/i.test(sourceSize?.format || '') || (!sourceSize?.format && /\.jpe?g$/i.test(new URL(url).pathname));
   return [...(jpeg ? ['jpg', 'png'] : ['png', 'jpg']).map(format => url + '?x-oss-process=image/format,' + format), url + '!_origin'];
@@ -37,6 +36,9 @@ export async function bestImage(asset) {
       const bytes = await responseBytes(address, 48 * 1024 * 1024);
       const details = imageDetails(bytes);
       if (!(details.width > 0 && details.height > 0)) throw new Error('圖片尺寸不正確。');
+      if (asset.archive && asset.category !== 'related' && (details.width < 480 || details.height < 650 || details.width / details.height < 0.4 || details.width / details.height > 0.9)) {
+        return { excluded: true, reason: '已確認版本候選為縮圖或非直向海報；相關待確認圖片不套用此篩選。', width: details.width, height: details.height };
+      }
       attempts.push({ url: address, width: details.width, height: details.height, bytes: bytes.length });
       if (!best || details.width * details.height > best.details.width * best.details.height) best = { bytes, details, downloadUrl: address };
       if (sourceSize?.verified && details.width === sourceSize.width && details.height === sourceSize.height) break;
@@ -75,7 +77,14 @@ export async function downloadAssets(assets, { output = 'downloads', workId = nu
       records.set(asset.url, record); results.push(record); continue;
     }
     try {
-      const { bytes, metadata } = await bestImage(asset);
+      const obtained = await bestImage(asset);
+      if (obtained.excluded) {
+        const record = reusable ? { ...previous, ...asset, status: 'preserved', warning: obtained.reason } : { ...asset, ...obtained, status: 'excluded' };
+        records.set(asset.url, record); results.push(record);
+        await saveJson(file, { schemaVersion: 1, workId, updatedAt: new Date().toISOString(), assets: [...records.values()] });
+        continue;
+      }
+      const { bytes, metadata } = obtained;
       // 更新不以較小的公開回應覆蓋已保存的較大圖片。
       if (reusable && metadata.width * metadata.height < previous.width * previous.height) {
         const record = { ...previous, ...asset, status: 'preserved', warning: '最新來源解像度較低，已保留原檔。' };

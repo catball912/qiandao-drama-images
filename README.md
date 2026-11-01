@@ -1,52 +1,66 @@
 # 千島劇本圖片搜尋技能
 
-供 AI 代理重用的劇本封面與圖集搜尋流程，以書面語繁體中文撰寫。包含可執行程式，能辨識同名版本、讀取公開圖集、下載圖片、核對實際解像度，並保存來源與本地快取。
+供 AI 代理直接替代現有圖片搜尋網站找圖的技能，以書面語繁體中文撰寫。2.0 已把網站的全部找圖類別封裝成可執行程式：千島搜尋與圖集、搜尋摘要高清圖源、關鍵詞相關圖片、外部文章及先行版補搜、已核對公開補充來源。
 
-## 使用方式
+## 安裝與使用
 
-將此儲存庫下載至代理支援的技能目錄，資料夾名稱使用 `qiandao-drama-images`。Codex 可放在 `~/.codex/skills/qiandao-drama-images`；其他代理可直接讀取 [SKILL.md](SKILL.md)。需要 Node.js 22 以上，無須安裝 npm 套件。
+需要 Node.js 22 以上，無須安裝 npm 套件。將儲存庫複製至代理支援的技能目錄；Codex 範例：
 
 ```bash
 git clone https://github.com/catball912/qiandao-drama-images.git ~/.codex/skills/qiandao-drama-images
 ```
 
-可向代理提出：
+其他代理可直接讀取 [SKILL.md](SKILL.md)。可提出：
 
-> 使用 $qiandao-drama-images，搜尋狸貓文創工作室《螻蟻》的封面與角色圖片，保存可取得的最高解像度，列出未取得的素材及來源。
-
-若代理無法執行程式，可按技能文件及參考資料使用既有 HTTP／瀏覽器工具；需保留相同的作品核對與尺寸驗證原則。
-
-## 程式範例
+> 使用 $qiandao-drama-images，搜尋狸貓文創工作室《螻蟻》的封面與角色圖片，包含關鍵詞相關素材及其他版本；保存最高可取得解像度，列出來源、待確認圖片及未取得項目。
 
 在儲存庫目錄執行：
 
 ```bash
-node scripts/qiandao-images.mjs search --query "螻蟻"
-node scripts/qiandao-images.mjs gallery --id 695041088494490294
-node scripts/qiandao-images.mjs download --id 695041088494490294 --output ./downloads/louyi
+node scripts/qiandao-images.mjs find --query "螻蟻" --publisher "狸貓文創工作室"
+node scripts/qiandao-images.mjs download --query "螻蟻" --id 695041088494490294 --output ./downloads/louyi
 ```
 
-重複執行會重用本地結果；`--refresh` 更新搜尋及圖集清單，`--redownload` 強制重新下載已有圖片。完整選項見 `node scripts/qiandao-images.mjs --help`。
+`find` 回傳合併清單，`download` 執行相同收集再下載。不確定同名版本時會列出候選，以結束碼 3 停止；提供作品 ID 或發行方後繼續。
 
-這是代理技能及命令列工具，並非託管網站。本地快取不需要雲端帳戶；程式不會上傳下載檔案。
+## 搜尋能力
 
-## 能力與界線
-
-| 功能 | 行為 |
+| 網站找圖方式 | Skill 2.0 |
 | --- | --- |
-| 同名作品 | 列出 ID 與發行摘要，由代理依使用者需求確認版本 |
-| 圖片收集 | 主封面、官方資料圖及屬性分組；保留票根、先行版標籤 |
-| 高清核對 | 比較來源資訊與實際下載像素，不以網址後綴判定原圖 |
-| 來源紀錄 | 清單保留網址、尺寸、SHA-256、格式、轉換及錯誤 |
-| 增量更新 | 重用本地檔案，更新時補充新圖，保留消失或暫時失效的舊圖 |
+| 繁簡名稱搜尋與同名發行方辨識 | 自動搜尋並保留版本選擇 |
+| 搜尋摘要封面、officials、HDs | 收集、分類並合併 |
+| App 圖集與作品頁 SSR 圖集 | 自動讀取及後備 |
+| 搜尋頁 Nuxt／公開資料後備 | API 失敗時使用 |
+| 已核對完整封面、角色與外部補充 | 內附具來源紀錄的公開 URL 索引 |
+| 其他關鍵詞命中的圖片 | 合併為相關待確認，保留作品 ID |
+| 外部文章／先行版補搜 | DuckDuckGo 公開搜尋、文章圖片擷取及已核對先行版索引 |
+| lazy-load、srcset、圖片連結 | 擷取較大候選，排除常見頭像與標誌 |
+| 外部圖片下載 | 支援與網站相同的公開圖片來源範圍 |
+| CDN 原尺寸核對及增量下載 | 保存像素、SHA-256、來源與本地快取 |
 
-當前圖集不保證包含歷史素材或其他平台的全部圖片。「官方圖」也不等於角色圖；圖片內容仍需辨識。程式不會生成、放大或重新繪製圖片。
+具體函式、限制與來源範圍見 [網站方法對照](references/search-methods.md)。已封裝全部找圖方法，不代表來源永遠可用或已收齊全網歷史素材。搜尋引擎拒絕、文章失效或圖集缺項都會保留警告；代理可用既有工具補查，再匯入清單下載。
 
-已於 2026-11-02 驗證公開匿名圖集流程。接口與 CDN 行為可能變動；追查方法、來源雜湊及已知限制見 [協定說明](references/protocol.md) 與 [缺圖追查](references/investigation.md)。
+## 快取、更新與交接
 
-本套件實測《螻蟻》可列出三個同名版本，狸貓版本取得 7 張資料圖加另列主封面；單張公開下載為 1080×1528 JPEG，已完整解碼並核對 SHA-256，清單如實標示尺寸受限。再次執行會重用本地檔案。17 項集中測試涵蓋匿名協定、作品辨識、分組、錯誤處理及快取行為。
+重複執行會重用本地清單及圖片。`--refresh` 重查來源並補充新圖；`--redownload` 才強制重新取得既有圖源。更新失敗或新圖較小時保留舊檔。每個作品應使用獨立輸出目錄。
 
-集中測試：
+```bash
+node scripts/qiandao-images.mjs find --query "血與冰淇淋" --id 524331162273962445 > collection.json
+node scripts/qiandao-images.mjs download --collection ./collection.json --output ./downloads/blood
+node scripts/qiandao-images.mjs archives --query "血與冰淇淋"
+node scripts/qiandao-images.mjs page --url "https://www.gamersky.com/handbook/202211/1540513.shtml"
+node scripts/qiandao-images.mjs --help
+```
+
+預設包含相關命中及外部文章；`--core-only` 可略過這兩類。預設輸出最多 80 個圖源、外部最多 8 頁、每頁 24 張候選；上限及來源失敗會明示，`--max-images`、`--max-pages` 可調整。結束碼 `0` 為完成、`1` 為錯誤、`2` 為部分失敗或來源警告、`3` 為待選作品或未找到。
+
+清單會區分來源標示尺寸、實際下載像素及是否轉碼。「官方圖」不等於角色圖；相關候選也不會自動變成已確認素材。工具不生成或插值放大圖片。程式不依賴原網站、個人登入、Vercel 或 Cloudflare；本套件不提供網站 UI、瀏覽器快取、ZIP 按鈕或雲端共用儲存。
+
+## 協定及驗證
+
+[協定說明](references/protocol.md) 記錄公開來源與既有核對摘要；[缺圖追查](references/investigation.md) 說明實際頁面、miniapp 設定與 REA 接力。進階 REA 調查需要代理環境已有工具，不會自動安裝或執行逆向引擎。
+
+2.0 的集中驗證涵蓋 30 個個案，包括各類來源合併、搜尋頁後備、版本選擇、公開補充索引、文章擷取、外部下載與快取重用。2026-11-02 實測《血與冰淇淋》取得 8 個合併圖源；單獨讀取其公開文章取得 22 個待確認圖片候選，外部先行版下載為 1280×1812 JPEG，已完整解碼及核對 SHA-256。候選張數不是本作已確認素材總數。
 
 ```bash
 node --test tests/*.test.mjs
@@ -54,4 +68,4 @@ node --test tests/*.test.mjs
 
 ## 授權
 
-本儲存庫的原創程式及文件採用 [MIT 授權](LICENSE)。繁簡字元對照資料衍生自 OpenCC，依 [Apache-2.0](licenses/Apache-2.0.txt) 散布，詳見 [第三方來源](THIRD_PARTY_NOTICES.md)。劇本圖片與千島網站程式不在本儲存庫內，也不因本工具而取得重新散布授權。
+原創程式及文件採用 [MIT](LICENSE)。OpenCC 衍生字元資料依 [Apache-2.0](licenses/Apache-2.0.txt) 散布，來源見 [第三方說明](THIRD_PARTY_NOTICES.md)。套件只保存公開來源的網址與核對註記，不附劇本圖片、網站 bundle、APK、HAR 或個人憑證；程式授權不涵蓋外部素材。

@@ -1,0 +1,234 @@
+{
+  "description": "2026-11-02 已核對的公開來源後備及補充索引；搜尋結果圖片不等於完整作品圖集，沒有宣稱涵蓋全部版本。",
+  "entries": [
+    {
+      "id": "524331162273962445",
+      "name": "血与冰淇淋",
+      "imgs": {
+        "HDs": null,
+        "cover": "https://treasure.qiandaocdn.com/treasure/images/fdA0LPQAOG1.jpg?imginfo=w1280,h1962",
+        "officials": [
+          "https://public.qiandaocdn.com/interior/images/fdAsjC96392.jpg?imginfo=w1280,h1812",
+          "https://public.qiandaocdn.com/interior/images/fdAsjQrzyc5.jpg?imginfo=w1280,h1812",
+          "https://public.qiandaocdn.com/interior/images/fdAsjOq6GsD.jpg?imginfo=w1280,h1812",
+          "https://public.qiandaocdn.com/interior/images/fdAsjnP6J9R.jpg?imginfo=w1280,h1812",
+          "https://public.qiandaocdn.com/interior/images/fdAsaU4GDov.jpg?imginfo=w1280,h1812",
+          "https://public.qiandaocdn.com/interior/images/fdAsaJk5bwp.jpg?imginfo=w1280,h1812"
+        ],
+        "whiteBgPng": ""
+      },
+      "image": "https://treasure.qiandaocdn.com/treasure/images/fdA0LPQAOG1.jpg?imginfo=w1280,h1962",
+      "key_property": "剧本杀 / 东方迷雾 墨菲工作室 / 城限 / 架空 诡计 还原 推理",
+      "rating": "8.3"
+    },
+    {
+      "id": "934993024688117205",
+      "name": "凶手与恋人",
+      "imgs": {
+        "HDs": null,
+        "cover": "echotechoss://user-treasure-v2.image/fdSN3hvY4PV.png?imginfo=w1688,h2252",
+        "officials": [
+          "echotechoss://interior-admin-v2.image/fdSNZ4E2Q7m.jpg?imginfo=w1280,h1817",
+          "echotechoss://interior-admin-v2.image/fdSNZPjoqw6.jpg?imginfo=w1280,h1817",
+          "echotechoss://interior-admin-v2.image/fdSNZh4oKL2.jpg?imginfo=w1280,h1817",
+          "echotechoss://interior-admin-v2.image/fdSNZuKoQ5R.jpg?imginfo=w1280,h1817",
+          "echotechoss://interior-admin-v2.image/fdSNZeW2d5L.jpg?imginfo=w1280,h1817",
+          "echotechoss://interior-admin-v2.image/fdSNZm13Z14.jpg?imginfo=w1280,h1817"
+        ],
+        "whiteBgPng": ""
+      },
+      "image": "echotechoss://user-treasure-v2.image/fdSN3hvY4PV.png?imginfo=w1688,h2252",
+      "key_property": "剧本杀 / 一闪工作室 / 城限 / 情感",
+      "rating": "0"
+    },
+    {
+      "id": "870707790300079386",
+      "name": "野菩萨",
+      "displayName": "野菩薩",
+      "imgs": {
+        "HDs": null,
+        "cover": "echotechoss://user-treasure-v2.image/fiwRKex4y5W.763be39f6e4804b84b6e42d2d773dcb7?imginfo=w1280,h1811",
+        "officials": [
+          "echotechoss://user-treasure-v2.image/fjXVCjd8ktW.jpg?imginfo=w1280,h1821"
+        ],
+        "whiteBgPng": ""
+      },
+      "image": "echotechoss://user-treasure-v2.image/fiwRKex4y5W.763be39f6e4804b84b6e42d2d773dcb7?imginfo=w1280,h1811",
+      "description": "劇本殺 / 一閃工作室 / 城限 / 演繹 現代 架空 情感 還原 思辨 立意 懷舊 現代",
+      "rating": "9",
+      "supplements": []
+    },
+    {
+      "id": "695041088494490294",
+      "name": "蝼蚁",
+      "imgs": {
+        "HDs": null,
+        "cover": "echotechoss://user-treasure-v2.image/q2JlzOPirW.jpg?imginfo=w2480,h3508",
+        "officials": null,
+        "whiteBgPng": ""
+      },
+      "image": "echotechoss://user-treasure-v2.image/q2JlzOPirW.jpg?imginfo=w2480,h3508",
+      "key_property": "剧本杀 / 狸猫文创工作室 / 城限 / 情感 现代 社会 人性",
+      "rating": "8"
+    }
+  ],
+  "archives": {
+    "血与冰淇淋": [
+      {
+        "url": "https://www.gamersky.com/handbook/202211/1540513.shtml",
+        "title": "《血与冰淇淋》剧本杀简介",
+        "images": [
+          {
+            "url": "https://img1.gamersky.com/image2022/11/20221122_djq_587_2/1.jpg",
+            "early": true
+          }
+        ],
+        "provenance": "已檢視原圖，畫面左上方明示〈先行版海報〉。此為另一款設計，不代表現行主海報原尺寸。"
+      }
+    ]
+  },
+  "supplements": {
+    "934993024688117205": [
+      {
+        "url": "https://public.qiandaocdn.com/interior/images/7910288589a4927b3019655907eff31b.png",
+        "category": "cover",
+        "label": "完整封面（另一名單版）",
+        "sourcePage": "https://public.qiandaocdn.com/interior/images/7910288589a4927b3019655907eff31b.png",
+        "sourceTitle": "千島公開 CDN · 已核對完整封面",
+        "provenance": "已核對公開完整封面及 2078×2772 來源像素；底部製作名單與現行封面不同。不是首頁裁切段，未宣稱為先行版。"
+      }
+    ],
+    "870707790300079386": [
+      {
+        "url": "https://midujuben.tor1.cdn.digitaloceanspaces.com/scripts/2026-10/2deda8c1-288f-4b78-8dff-583c6c585dd8.jpg",
+        "category": "official",
+        "label": "角色｜美夢",
+        "sourcePage": "https://midujuben.com/scripts/ye-pu-sa",
+        "sourceTitle": "MIDU 公開劇本目錄 · 野菩薩",
+        "provenance": "公開角色目錄所列海報，已直接取得、解碼及檢視；1216×1732。屬外部公開補充來源，不冒稱千島原圖。"
+      },
+      {
+        "url": "https://midujuben.tor1.cdn.digitaloceanspaces.com/scripts/2026-10/88b41592-a02b-4c52-b680-90e088af27a6.jpg",
+        "category": "official",
+        "label": "角色｜空屋",
+        "sourcePage": "https://midujuben.com/scripts/ye-pu-sa",
+        "sourceTitle": "MIDU 公開劇本目錄 · 野菩薩",
+        "provenance": "公開角色目錄所列海報，已直接取得、解碼及檢視；1216×1734。屬外部公開補充來源，不冒稱千島原圖。"
+      },
+      {
+        "url": "https://midujuben.tor1.cdn.digitaloceanspaces.com/scripts/2026-10/79140abe-8314-4111-aaa5-74374d64eb76.jpg",
+        "category": "official",
+        "label": "角色｜釘子",
+        "sourcePage": "https://midujuben.com/scripts/ye-pu-sa",
+        "sourceTitle": "MIDU 公開劇本目錄 · 野菩薩",
+        "provenance": "公開角色目錄所列海報，已直接取得、解碼及檢視；1216×1734。屬外部公開補充來源，不冒稱千島原圖。"
+      },
+      {
+        "url": "https://midujuben.tor1.cdn.digitaloceanspaces.com/scripts/2026-10/0f0c5f1c-8922-443d-8329-fae193e0907c.jpg",
+        "category": "official",
+        "label": "角色｜歸鄉",
+        "sourcePage": "https://midujuben.com/scripts/ye-pu-sa",
+        "sourceTitle": "MIDU 公開劇本目錄 · 野菩薩",
+        "provenance": "公開角色目錄所列海報，已直接取得、解碼及檢視；1216×1737。屬外部公開補充來源，不冒稱千島原圖。"
+      },
+      {
+        "url": "https://midujuben.tor1.cdn.digitaloceanspaces.com/scripts/2026-10/720fe4a4-f7fc-430b-aea9-f2575eea61a9.jpg",
+        "category": "official",
+        "label": "角色｜盛夏",
+        "sourcePage": "https://midujuben.com/scripts/ye-pu-sa",
+        "sourceTitle": "MIDU 公開劇本目錄 · 野菩薩",
+        "provenance": "公開角色目錄所列海報，已直接取得、解碼及檢視；1216×1716。屬外部公開補充來源，不冒稱千島原圖。"
+      },
+      {
+        "url": "https://midujuben.tor1.cdn.digitaloceanspaces.com/scripts/2026-10/b70867ce-fa83-43f7-8fb4-b6ac98b7ca02.jpg",
+        "category": "official",
+        "label": "角色｜遠望",
+        "sourcePage": "https://midujuben.com/scripts/ye-pu-sa",
+        "sourceTitle": "MIDU 公開劇本目錄 · 野菩薩",
+        "provenance": "公開角色目錄所列海報，已直接取得、解碼及檢視；1216×1734。屬外部公開補充來源，不冒稱千島原圖。"
+      },
+      {
+        "url": "https://midujuben.tor1.cdn.digitaloceanspaces.com/scripts/2026-10/16239348-f042-465e-a2be-158644e0f440.jpg",
+        "category": "official",
+        "label": "角色｜銀屏",
+        "sourcePage": "https://midujuben.com/scripts/ye-pu-sa",
+        "sourceTitle": "MIDU 公開劇本目錄 · 野菩薩",
+        "provenance": "公開角色目錄所列海報，已直接取得、解碼及檢視；1216×1731。屬外部公開補充來源，不冒稱千島原圖。"
+      }
+    ],
+    "695041088494490294": [
+      {
+        "url": "https://treasure.qiandaocdn.com/treasure/images/RjRfrmN5Zi.png?imginfo=w2480,h3508",
+        "category": "official",
+        "label": "角色｜邵知雨",
+        "sourcePage": "https://qiandao.com/spu?id=695041088494490294",
+        "sourceTitle": "千島作品頁資料圖｜狸貓文創工作室",
+        "provenance": "2026-11-02 由 Comet 作品頁資料圖原生選單複製來源，逐張檢視角色名；!info 回報2480×3508。240px縮圖只作核對，下載由後端另取最高公開可得版本，實際像素另記。"
+      },
+      {
+        "url": "https://treasure.qiandaocdn.com/treasure/images/RjRfIpaN86.png?imginfo=w2480,h3508",
+        "category": "official",
+        "label": "角色｜林三",
+        "sourcePage": "https://qiandao.com/spu?id=695041088494490294",
+        "sourceTitle": "千島作品頁資料圖｜狸貓文創工作室",
+        "provenance": "2026-11-02 由 Comet 作品頁資料圖原生選單複製來源，逐張檢視角色名；!info 回報2480×3508。240px縮圖只作核對，下載由後端另取最高公開可得版本，實際像素另記。"
+      },
+      {
+        "url": "https://treasure.qiandaocdn.com/treasure/images/RjRiiECUDz.png?imginfo=w2480,h3508",
+        "category": "official",
+        "label": "角色｜向晚",
+        "sourcePage": "https://qiandao.com/spu?id=695041088494490294",
+        "sourceTitle": "千島作品頁資料圖｜狸貓文創工作室",
+        "provenance": "2026-11-02 由 Comet 作品頁資料圖原生選單複製來源，逐張檢視角色名；!info 回報2480×3508。240px縮圖只作核對，下載由後端另取最高公開可得版本，實際像素另記。"
+      },
+      {
+        "url": "https://treasure.qiandaocdn.com/treasure/images/RjRiBZawuo.png?imginfo=w2480,h3508",
+        "category": "official",
+        "label": "角色｜宋聽瀾",
+        "sourcePage": "https://qiandao.com/spu?id=695041088494490294",
+        "sourceTitle": "千島作品頁資料圖｜狸貓文創工作室",
+        "provenance": "2026-11-02 由 Comet 作品頁資料圖原生選單複製來源，逐張檢視角色名；!info 回報2480×3508。240px縮圖只作核對，下載由後端另取最高公開可得版本，實際像素另記。"
+      },
+      {
+        "url": "https://treasure.qiandaocdn.com/treasure/images/RjRiFUuAdU.png?imginfo=w2480,h3508",
+        "category": "official",
+        "label": "角色｜余年",
+        "sourcePage": "https://qiandao.com/spu?id=695041088494490294",
+        "sourceTitle": "千島作品頁資料圖｜狸貓文創工作室",
+        "provenance": "2026-11-02 由 Comet 作品頁資料圖原生選單複製來源，逐張檢視角色名；!info 回報2480×3508。240px縮圖只作核對，下載由後端另取最高公開可得版本，實際像素另記。"
+      },
+      {
+        "url": "https://treasure.qiandaocdn.com/treasure/images/RjRizzMJtW.png?imginfo=w2480,h3508",
+        "category": "official",
+        "label": "角色｜邵遠川",
+        "sourcePage": "https://qiandao.com/spu?id=695041088494490294",
+        "sourceTitle": "千島作品頁資料圖｜狸貓文創工作室",
+        "provenance": "2026-11-02 由 Comet 作品頁資料圖原生選單複製來源，逐張檢視角色名；!info 回報2480×3508。240px縮圖只作核對，下載由後端另取最高公開可得版本，實際像素另記。"
+      }
+    ]
+  },
+  "imageLabels": {
+    "870707790300079386": {
+      "https://treasure.qiandaocdn.com/treasure/images/fjXVCjd8ktW.jpg": "角色｜生吞"
+    }
+  },
+  "galleryChecks": {
+    "695041088494490294": {
+      "checkedAt": "2026-11-02",
+      "sourcePage": "https://qiandao.com/spu?id=695041088494490294",
+      "sourceKind": "qiandao-product-page",
+      "visibleGalleryImages": 7,
+      "confirmedRoleImages": 6,
+      "ticketStatus": "not-located",
+      "complete": false,
+      "note": "已核對千島作品頁六張玩家角色圖來源；第七張資料圖為封面。票根尚未定位，未宣稱官方全套素材已齊。"
+    }
+  },
+  "imageAnnotations": {
+    "https://treasure.qiandaocdn.com/treasure/images/MYklmALCj5.png": {
+      "category": "cover",
+      "label": "圖集封面",
+      "provenance": "2026-11-02 Comet資料圖逐張檢視；此為封面，不是第七位玩家。此註記只分類既有原圖，不是圖集發現入口。"
+    }
+  }
+}
